@@ -2,7 +2,7 @@
 # Makefile for Peter Dannegger's bootloader, to be used with the GNU
 # toolchest (as opposed to Atmel's Assembler).
 #
-# Time-stamp: <2010-01-14 23:28:05 hcz>
+# Time-stamp: <2010-01-16 15:05:40 hcz>
 
 
 ####### user presets ##########################
@@ -12,9 +12,9 @@
 # MCU name
 # One of:
 # - at90s2313, at90s2323,
-#     attiny22, attiny26, at90s2333, at90s2343, at90s4414, at90s4433,
-#     at90s4434, at90s8515, at90c8534, at90s8535, at86rf401, attiny13,
-#     attiny2313, attiny261, attiny461, attiny861, attiny24, attiny44,
+#     at90s2333, at90s2343, at90s4414, at90s4433,
+#     at90s4434, at90s8515, at90c8534, at90s8535, at86rf401,
+#     attiny2313, attiny24, attiny44,
 #     attiny84, attiny25, attiny45, attiny85
 # - atmega103, atmega603, at43usb320,
 #     at43usb355, at76c711
@@ -41,7 +41,7 @@ MCU = atmega8
 # Name of the Atmel defs file for the actual MCU.
 #
 # They are part of AVR Studio (located in Windows at
-# \Programs\Atmel\AVR Tools\AvrAssembler2\Appnotes\xxx.inc).  
+# \Programs\Atmel\AVR Tools\AvrAssembler2\Appnotes\*.inc).  
 #
 # You may choose to download AVR000.zip at
 # http://attiny.com/definitions.htm instead.  If you do so, just click
@@ -127,7 +127,7 @@ bootload.hex: bootload.elf
 
 bootload.elf : bootload.o stub.o
 ifndef BOOTRST
-	vars="$$(./get_text_addrs.sh -c $(FLASHEND))"; \
+	vars="$$(./get_text_addrs.sh $(FLASHEND))"; \
 	eval "$$vars"; \
 	sed -e "s/@LOADER_START@/$$LOADER_START/g" \
 	    -e s'/@RAM_START@/$(SRAM_START)/g' \
@@ -188,10 +188,11 @@ dbg:
 # ASM's output) a binary image gets generated and compared against
 # Atmel's output in BOOTLOAD.hex.
 #
-# Use AVR Studio (or the like) to generate the BOOTLOAD.hex file from
-# the original sources and put it into the current (resident-gnu/)
-# directory.  Then run 'make cmp'.  You'll get a listing which depicts
-# the differences.
+# Use AVR Studio (or wine or the like) to generate the BOOTLOAD.hex
+# file from the original sources and put it into the current
+# (resident-gnu/) directory.  The output must be called 'BOOTLOAD.hex"
+# (case matters).  Then run 'make cmp'.  You'll get a listing which
+# depicts the differences.
 #
 # We convert the two files into raw binaries, change them into text
 # (two bytes (4 chars) per line) using hexdump, then run the result
@@ -228,7 +229,7 @@ cmp:  BOOTLOAD.02x bootload.02x
 DISTFILES = $(AUTO_CONVERTED_FILES) $(MANUALLY_ADDED_FILES)
 DISTFILES += $(ADDITIONAL_DEPENDENCIES)
 DISTFILES += bootload.template.x diff2addr.sh README Makefile _conv.awk build_no
-DISTFILES += get_text_addrs.sh added/stub.S
+DISTFILES += get_text_addrs.sh get_bootsection_addrs.sh added/stub.S
 
 dist:
 	tar --directory .. -czf \
