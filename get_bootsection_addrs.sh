@@ -30,7 +30,7 @@ boot_bytes=$((boot_bytes + 2))  # add stub size
 boot_words=$((boot_bytes / 2))
 
 
-diff=999999
+diff=65535
 for bootsection_words; do
     d=$(( (end_wordaddr - bootsection_words) - boot_words))
     if [ "$d" -ge 0 ] && [ "$d" -lt "$diff" ]; then
@@ -43,4 +43,4 @@ done
 printf "LOADER_START=%#x\n" $((bootsection_words_start * 2))
 printf "STUB_OFFSET=%#x\n" $(( (end_wordaddr - bootsection_words_start) * 2))
 
-echo >&2 "*** Note: set BOOTSZ fuses for the word address $bootsection_words_start ***"
+echo >&2 "*** Note: set BOOTSZ fuses to the word address $bootsection_words_start ***"

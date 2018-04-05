@@ -131,7 +131,8 @@ bootload.hex: bootload.elf
 bootload.elf : bootload.o stub.o
 ifndef BOOTRST
 	vars="$$(./get_text_addrs.sh $(FLASHEND))"; \
-	arch="$$(avr-gcc -mmcu=$(MCU) -### bootload.o  -o x 2>&1 | gawk '/\/bin\/ld/ {print $$3}')";\
+	arch="$$(./get_avr_arch.sh -mmcu=$(MCU) bootload.o)"; \
+	echo "arch=$$arch";\
 	echo "$$vars"; \
 	eval "$$vars"; \
 	sed -e "s/@LOADER_START@/$$LOADER_START/g" \
@@ -145,7 +146,8 @@ ifndef BOOTRST
 else
 	vars="$$(./get_bootsection_addrs.sh $(FLASHEND) $(FIRSTBOOTSTART) \
                 $(SECONDBOOTSTART) $(THIRDBOOTSTART) $(FORTHBOOTSTART))"; \
-	arch="$$(avr-gcc -mmcu=$(MCU) -### bootload.o  -o x 2>&1 | gawk '/\/bin\/ld/ {print $$3}')";\
+	arch="$$(./get_avr_arch.sh -mmcu=$(MCU) bootload.o)"; \
+	echo "arch=$$arch";\
 	echo "$$vars"; \
 	eval "$$vars"; \
 	sed -e "s/@LOADER_START@/$$LOADER_START/g" \
@@ -239,6 +241,7 @@ DISTFILES = $(AUTO_CONVERTED_FILES) $(MANUALLY_ADDED_FILES)
 DISTFILES += $(ADDITIONAL_DEPENDENCIES)
 DISTFILES += bootload.template.x diff2addr.sh README Makefile _conv.awk build_no
 DISTFILES += get_text_addrs.sh get_bootsection_addrs.sh added/stub.S
+DISTFILES += get_avr_arch.sh
 
 dist:
 	tar --directory .. -czf \
