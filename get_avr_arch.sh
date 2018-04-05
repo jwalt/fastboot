@@ -39,9 +39,12 @@ esac
 magic=";#magic1295671ghkl-."
 # call gcc, asking it for the command line which it would use for
 # linking:
-set -- $(avr-gcc -m"$mcu" -### "$1" -o "$magic" 2>&1 \
-         | gawk '/^avr-gcc:/||/ld.*'"$magic"'.*"-lgcc"/')
-
+# old command for <= gcc-4.5*
+#set -- $(avr-gcc -m$mcu -### "$1" -o "$magic" 2>&1 \
+#         | gawk '/^avr-gcc:/||/"-m".*'"$magic"'.*"-lgcc"/')
+# new command for > gcc-4.5*	 
+set -- $(avr-gcc -m$mcu -### "$1" -o "$magic" 2>&1 \
+         | gawk '/^avr-gcc:/||/-m .*'"$magic"'.*-lgcc/')
 if [ "$1" = "avr-gcc:" ]; then
     # we have an error message from gcc:
     echo "$*"
@@ -51,7 +54,10 @@ fi
 # retrieve architecture argument from gcc's commandline (the argument
 # which follows '"-m"'):
 while [ -n "$2" ]; do
-    if [ "$1" = '"-m"' ]; then
+# old command for <= gcc-4.5*
+#    if [ "$1" = '"-m"' ]; then
+# new command for > gcc-4.5*	 
+    if [ "$1" = '-m' ]; then
 	eval echo $2		# eval: remove quotes
 	exit 0
     fi
