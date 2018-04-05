@@ -17,8 +17,8 @@ that the CPU frequency is now defined in Makefile, not in fastload.h as with
 the original, as well as the MCU type.  So don't change anything in the
 other files even if the comments say so.
 
-Then add the mXXXdef.inc file which you named in Makefile into the current
-directory.  See the Makefile for instructions on how to get at it.  (It is
+Then add the mXXXdef.inc file which you named in Makefile into the ``atmel``
+subdirectory.  See the Makefile for instructions on how to get at it.  (It is
 needed to create atmel_def.mak.)
 
 Edit the section after that to reflect your transmitter and receiver pins.

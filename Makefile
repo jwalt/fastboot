@@ -65,7 +65,8 @@ MCU = atmega8
 # suite (several hundred MB, need to register at atmel.com) and install it
 # on a Windows system (getting version 6 to run under wine seems not to be
 # trivial) to get these files. You can try searching on the web, but
-# hostings of these files tend to disappear regularly.
+# hostings of these files tend to disappear regularly. All .inc files go
+# into subdirectory "atmel".
 #
 # Examples (select one of them or add your own):
 # ATMEL_INC = m168def.inc
@@ -183,7 +184,7 @@ else
 	  --cref $+ -o $@ --defsym Application=0
 endif
 
-atmel_def.h: $(ATMEL_INC) Makefile
+atmel_def.h: atmel/$(ATMEL_INC) Makefile
 #        We use gawk instead of egrep here due to problems with
 #        WinAVR's egrep (which I didn't dive into):
 	./conv.awk $< | gawk '/PAGESIZE|SIGNATURE_|SRAM_|FLASHEND|BOOT/' > $@
