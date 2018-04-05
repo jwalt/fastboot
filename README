@@ -1,3 +1,4 @@
+Time-stamp: <2009-08-13 12:15:14 hcz>
 
 DESCRIPTION
 ===========
@@ -18,12 +19,12 @@ QUICK START (LINUX)
  fastload.h as with the original, as well as the MCU type.  So don't
  change anything in the other files even if the comments say so.
 
- Edit the end of converted/bootload.asm to reflect your transmitter
- and receiver pins.  Make sure none of the include files is selected.
-
  Then add the mXXXdef.inc file which you named in Makefile into the
  current directory.  See the Makefile for instructions on how to get
- at it.
+ at it.  (It is needed to create atmel_def.mak.)
+
+ Edit the end of converted/bootload.asm to reflect your transmitter
+ and receiver pins.  Make sure none of the include files is selected.
 
  After this is done, simply run make.  This creates the output files
  bootload.elf and bootload.hex (ELF and IHEX format), ready for

@@ -2,7 +2,7 @@
 # Makefile for Peter Dannegger's bootloader, to be used with the GNU
 # toolchest (as opposed to Atmel's Assembler).
 #
-# Time-stamp: <2009-08-07 14:29:55 hcz>
+# Time-stamp: <2010-01-12 12:02:43 hcz>
 
 
 ####### user presets ##########################
@@ -32,15 +32,21 @@
 #     at90usb646, at90usb647, at90usb1286, at90usb1287, at94k
 # - atmega2560, atmega2561
 #
-MCU = atmega168
+MCU = atmega8
 
 # Name of the Atmel defs file for the actual MCU.
 #
-# The are part of AVR Studio (located in Windows at
-# \Programs\Atmel\AVR Tools\AvrAssembler2\Appnotes\xxx.inc).  You
-# may choose to download AVR000.zip at http://attiny.com/definitions.htm
-# instead.
-ATMEL_INC = m168def.inc
+# They are part of AVR Studio (located in Windows at
+# \Programs\Atmel\AVR Tools\AvrAssembler2\Appnotes\xxx.inc).  
+#
+# You may choose to download AVR000.zip at
+# http://attiny.com/definitions.htm instead.  If you do so, just click
+# on the HERE in "Click HERE to download all the AVR definitions
+# files" and unzip it in the same directory as this Makefile.
+#
+# Example:
+# ATMEL_INC = m168def.inc
+ATMEL_INC=m8def.inc
 
 # Processor frequency.  The value is not critical:
 #F_CPU = 14745600
@@ -121,7 +127,6 @@ else
 	    bootload.template.x > bootload.x
 endif
 	avr-ld -N -E -T bootload.x -Map=$(patsubst %.elf,%,$@).map --cref $+ -o $@
-	#avr-gcc -Wl,-Map=display.map,--cref -nodefaultlibs -nostdlib $+ -o $@
 
 atmel_def.h: $(ATMEL_INC) Makefile
 #        We use gawk instead of egrep here due to problems with

@@ -11,5 +11,10 @@
 #include <avr/io.h>
               .section .text
               .global stub          ; so it shows up in the symbol table
-stub:         rjmp  api_call
+stub:         
+#if    __AVR_HAVE_JMP_CALL__
+              jmp   api_call
+#else
+              rjmp  api_call
+#endif
               .end
