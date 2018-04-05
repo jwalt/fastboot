@@ -32,10 +32,10 @@ _pro4:
 _pro5:
 	rcall	prog_page		; CY = 1: o.k
 	brcc	main_error		; error, bootloader reached
-	subi	zl, lo8(-PageSize)
-	sbci	zh, hi8(-PageSize)	; point to next page
+	subi	zl, lo8(-2*PageSize)
+	sbci	zh, hi8(-2*PageSize)	; point to next page
 #if FLASHEND > 0x7FFF
-	sbci    zx, byte3(-2*BufferSize)
+	sbci    zx, hh8(-/* 2* */BufferSize)
 #endif
 	cpi	xl, lo8(ProgBuffEnd)
 	cpc	xh, yh
@@ -53,15 +53,15 @@ _pro6:
 ;        Z  = page to program
 ;output: CY = 0: error, attempt to overwrite itself
 ;
-#define  PAGEMASK (PageSize - 1) & ~1
+#define  PAGEMASK (PageSize *2 - 1) & ~1
 
 prog_page:
 ;------------------------------ Avoid self destruction ! -----------------
 	cpi	zl, (2*BOOTSTART)&0xff
-	ldi	a0, BOOTSTART>>7
+	ldi	a0, (BOOTSTART&0x7fff)>>7
 	cpc	zh, a0                  	; below bootloader ?
 #if FLASHEND > 0x7FFF
-	ldi     a0, byte3(2*BootStart)
+	ldi     a0, hh8(2*BootStart)
 	cpc     zx, a0
 #endif
 	brcc	_prp3				; CY = 0: error
@@ -75,8 +75,8 @@ _prp1:	ld	r0, x+
 	andi	a0, lo8(PAGEMASK)
 	brne	_prp1
 ;------------------------------ Erase page -------------------------------
-	subi	zl, lo8(PageSize)
-	sbci	zh, hi8(PageSize)
+	subi	zl, lo8(2*PageSize)
+	sbci	zh, hi8(2*PageSize)
 	ldi	a0, 1<<PGERS^1<<SPMEN		; erase page command
 	rcall	do_spm
 ;------------------------------ Program page -----------------------------

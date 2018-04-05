@@ -2,7 +2,7 @@
 
   mangled_case.h
 
-  Time-stamp: <2010-01-12 23:04:12 hcz>
+  Time-stamp: <2010-01-14 15:59:07 hcz>
 
    (c) 2009 H. C. Zimmerer.  You may use this file and the
    accompanying files of this project for whatever you want to do with
@@ -19,7 +19,6 @@
 #define ProgbuffEnd PROGBUFFEND
 #define PageSize PAGESIZE
 #define Version VERSION
-#define ProgBuffEnd PROGBUFFEND
 #define program Program
 #ifdef FIRSTBOOTSTART
 # define FirstBootStart FIRSTBOOTSTART

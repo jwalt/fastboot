@@ -40,10 +40,10 @@ _pro3:
 	ldi     zh, BOOTSTART>>7
 _pro4:
 #if PageSize < 32
-	sbiw	zl, PageSize
+	sbiw	zl, PageSize * 2
 #else
-	subi    zl, lo8(PageSize)
-	sbci    zh, hi8(PageSize)
+	subi    zl, lo8(2 * PageSize)
+	sbci    zh, hi8(2 * PageSize)
 #endif
 	ldi	a0, 1<<PGERS^1<<SPMEN
 	out     SPMCSR, a0
@@ -52,8 +52,8 @@ _pro4:
 ;-------------------------------------------------------------------------
 _pro5:
 	brtc	_pro6
-	std	y+PageSize-2, appl
-	std	y+PageSize-1, apph
+	std	y+2*PageSize-2, appl
+	std	y+2*PageSize-1, apph
 ;---------------------- Fill page buffer ---------------------------------
 _pro6:
 	ld	r0, y+
@@ -65,10 +65,10 @@ _pro6:
 	cpi	yl, lo8(ProgBuffEnd)
 	brne	_pro6
 #if PageSize < 32
-	sbiw	zl, PageSize
+	sbiw	zl, 2*PageSize
 #else
-	subi	zl, lo8(PageSize)
-	sbci	zh, hi8(PageSize)
+	subi	zl, lo8(2*PageSize)
+	sbci	zh, hi8(2*PageSize)
 #endif
 ;---------------------- Program page -------------------------------------
 	ldi	a0, 1<<PGWRT^1<<SPMEN	; write page command
@@ -76,10 +76,10 @@ _pro6:
 	SPM
 ;---------------------- Next Page ----------------------------------------
 #if PageSize < 32
-	adiw	zl, PageSize
+	adiw	zl, 2*PageSize
 #else
-	subi	zl, lo8(-PageSize)
-	sbci	zh, hi8(-PageSize)	; point to next page
+	subi	zl, lo8(-2*PageSize)
+	sbci	zh, hi8(-2*PageSize)	; point to next page
 #endif
 	brts	_pro8
 	ldi	a0, CONTINUE

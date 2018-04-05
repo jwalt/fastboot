@@ -1,10 +1,22 @@
-Time-stamp: <2009-08-13 12:15:14 hcz>
+Time-stamp: <2010-01-14 23:56:41 hcz>
 
 DESCRIPTION
 ===========
 
  This is an adaption of Peter Dannegger's fine AVR Bootloader
  (Fastboot) for Linux and WinAVR.
+
+
+NEW in BUILD# 22
+================
+
+ The entire configuartion has been moved into Makefile.  You don't
+ need to go into another file anymore to adapt the bootloader to your
+ configuration.
+
+ The bootloader now uses an even compacter code layout for devices
+ without a boot section (e.g., Tiny AVRs), squeezing out another ~30
+ bytes over the original version.
 
 
 QUICK START (LINUX)
@@ -23,7 +35,7 @@ QUICK START (LINUX)
  current directory.  See the Makefile for instructions on how to get
  at it.  (It is needed to create atmel_def.mak.)
 
- Edit the end of converted/bootload.asm to reflect your transmitter
+ Edit the section after that to reflect your transmitter
  and receiver pins.  Make sure none of the include files is selected.
 
  After this is done, simply run make.  This creates the output files

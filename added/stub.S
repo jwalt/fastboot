@@ -9,17 +9,14 @@
  */
 
 #include <avr/io.h>
+#undef FLASHEND
 #include "atmel_def.h"
 #include "mangled_case.h"
               .section .text
               .global stub          ; so it shows up in the symbol table
 stub:
 #ifdef FirstBootStart
-# if    __AVR_HAVE_JMP_CALL__
-              jmp   api_call
-# else
               rjmp  api_call
-# endif
 #else   /* no APICALL, so just return */
               ret
 #endif

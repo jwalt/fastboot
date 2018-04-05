@@ -5,7 +5,7 @@
 ;
 SendMessage:
 #if FLASHEND > 0x7FFF
-	ldi	zx, byte3(2*Messages)
+	ldi	zx, hh8(/* 2* */Messages)
 	out	RAMPZ, zx
 #endif
 	ldi	zl, lo8(/* 2* */Messages)

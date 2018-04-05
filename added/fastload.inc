@@ -4,7 +4,7 @@
 
   Written by Peter Dannegger, modified by H. C. Zimmerer
 
-   Time-stamp: <2010-01-12 23:00:10 hcz>
+   Time-stamp: <2010-01-14 21:16:21 hcz>
 
    You may use my modifications here and in the accompanying files of
    this project for whatever you want to do with them provided you
@@ -22,6 +22,9 @@
 #include "fastload.h"
 .list
 init:
+#ifndef FIRSTBOOTSTART
+;        .equ    Application,init-2
+#endif
 	cli				; no interrupts allowed
 	ldi	a0, lo8(RamEnd)	; initialize stack
 	out	SPL, a0
@@ -67,8 +70,8 @@ Messages:
 .byte           VERSION>>8
 .byte           VERSION&0xff
 .byte  	        3
-.byte           (BufferSize >> 8) & 0xff
-.byte           BufferSize&0xff
+.byte           ((2*BufferSize)>>8)
+.byte           ((2*BufferSize) & 0xff)
 .byte  	        4
 .byte           SIGNATURE_000
 .byte           SIGNATURE_001

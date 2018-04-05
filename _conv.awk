@@ -26,7 +26,6 @@ BEGIN { IGNORECASE = 1 }
 $1 == ".nolist" {next}
 /2 *\* *PageSize/ { sub(/2 *\* *PageSize/, "PageSize") }
 /PageSize *\* *2/ { sub(/PageSize *\* *2/, "PageSize") }
-/0x0?[Ff][Ff][Ff][^0-9A-Fa-f]/ {sub(/0x0?[Ff][Ff][Ff]/, "0x1FFF") } # 8k (rjmp) limit
 
 
 $1 == ".org" \

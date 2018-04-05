@@ -2,7 +2,7 @@
 
         bootload.template.x and bootload.x
 
-         Time-stamp: <2009-08-07 14:37:38 hcz>
+         Time-stamp: <2010-01-14 21:22:26 hcz>
 
         Linker script for Peter Dannegger's bootloader.  Always make
         sure you edit bootload.template.x.  Any changes made to
@@ -21,6 +21,8 @@ MEMORY
   text      (rx)   : ORIGIN = @LOADER_START@, LENGTH = @STUB_OFFSET@ + 2
   bss       (rw!x) : ORIGIN = 0x8000000 + @RAM_START@, LENGTH = @RAM_SIZE@
 }
+
+
 /* PHDRS { stub PT_LOAD ; } */
 SECTIONS
 {

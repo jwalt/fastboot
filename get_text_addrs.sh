@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <2010-01-13 19:01:06 hcz>
+# Time-stamp: <2010-01-14 23:38:46 hcz>
 # written by H. C. Zimmerer
 
 # This is somewhat tricky: for devices without a boot section, the
@@ -24,19 +24,34 @@
 # (e.g. '0x1fff' for 16 kByte devices) (#define FLASHEND in the Atmel
 # def file).
 
+if [ "$1" = "-c" ]; then
+    copt=1
+    shift
+fi
+
 [ $# -ne 1 ] && {
     echo "\
-Syntax: ${0##*/} higest_flash_word_address"
+Syntax: ${0##*/} [-c] higest_flash_word_address
+Function: compute linker parameters for peda's bootloader
+Opts:
+  -c  Use an as compact as possible code layout (smaller than the original)"
     exit 1
 }
 
-avr-objdump -h bootload.o \
-| gawk -v end_wordaddr="$1" '
-    $2 == ".text" {
-      len = strtonum("0x" $3)
-      end = (strtonum(end_wordaddr) + 1)
-      printf("# loader starts at %#x\n", end - len - 2)
-      printf("LOADER_START=\"(%#x - %d)\"\n", end, len+2)
-      printf("STUB_OFFSET=%d\n", len)
-    }
-  '
+
+end_wordaddr=$(($1))
+flash_end=$(printf "%#x\n" $(($1 * 2 + 1)))
+
+boot_map=$(objdump -h bootload.o) || exit
+boot_bytes=$(echo "$boot_map" | gawk '/.text/ {print "0x" $3}')
+boot_bytes=$((boot_bytes + 2))  # add stub size
+boot_words=$((boot_bytes / 2))
+
+[ -z "$copt" ] && boot_bytes="$(( (boot_bytes | 0xff) + 1 ))"
+
+printf >&2 "*** Last available byte address for the user program: %#x\n" \
+ $((flash_end + 1 - boot_bytes - 3))
+{
+    printf "LOADER_START=%#x\n" $((flash_end + 1 - boot_bytes))
+    printf "STUB_OFFSET=%#x\n" $((boot_bytes - 2))
+} | tee /dev/stderr

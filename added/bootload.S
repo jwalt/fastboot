@@ -2,7 +2,7 @@
 
    bootload.S
 
-   Time-stamp: <2009-07-28 13:55:47 hcz>
+   Time-stamp: <2010-01-14 18:59:04 hcz>
 
    Main file of Peter Danneger's AVR bootloader for use
    with the avr-gcc tools.
@@ -33,8 +33,6 @@
 #define byte2(x) ((x & 0xff00)>>8)
 #define byte1(x) (x & 0xff)
 
-//#define SRAM_SIZE (RAMEND - RAM_START + 1)
-#define PAGESIZE SPM_PAGESIZE
 
 /* 
    Atmel's AVR assembler is case insensitive, gcc is not.
@@ -42,9 +40,11 @@
    program mix case.
 */
 #include "mangled_case.h"
+
 /* 
    This includes the program:
 */
 #include "bootload.asm"
+
 
               .global api_call

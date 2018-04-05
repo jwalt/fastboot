@@ -3,7 +3,7 @@
 ;-------------------------------------------------------------------------
 	ldi	yl, 10			; try it 10 times
 #if FLASHEND > 0x7FFF
-	ldi	a0, byte3(2*Password)
+	ldi	a0, hh8(/* 2* */Password)
 	out	RAMPZ, a0
 #endif
 checkpwd:

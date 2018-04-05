@@ -59,8 +59,8 @@ timeout:				; command 5
 #if SRX_PORT != STX_PORT
 	out	SRX_PORT, zerol
 #endif
-#if __AVR_HAVE_JMP_CALL__
-	jmp	Application
+#if FlashEnd > 0x0fff
+        jmp Application
 #else
 	rjmp	Application		; run application
 #endif
