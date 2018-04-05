@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <2010-01-14 14:44:59 hcz>
+# Time-stamp: <2010-01-22 11:13:33 hcz>
 # written by H. C. Zimmerer
 
 # This small scripts selects the bootloader start address.  It expects
@@ -24,7 +24,7 @@ Syntax: ${0##*/} higest_flash_word_address bootsection_word_addresses ..."
 end_wordaddr=$(($1))
 shift
 
-boot_map=$(objdump -h bootload.o) || exit
+boot_map=$(avr-objdump -h bootload.o) || exit
 boot_bytes=$(echo "$boot_map" | gawk '/.text/ {print "0x" $3}')
 boot_bytes=$((boot_bytes + 2))  # add stub size
 boot_words=$((boot_bytes / 2))

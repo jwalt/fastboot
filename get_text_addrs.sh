@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <2010-01-14 23:38:46 hcz>
+# Time-stamp: <2010-01-22 11:13:33 hcz>
 # written by H. C. Zimmerer
 
 # This is somewhat tricky: for devices without a boot section, the
@@ -42,7 +42,7 @@ Opts:
 end_wordaddr=$(($1))
 flash_end=$(printf "%#x\n" $(($1 * 2 + 1)))
 
-boot_map=$(objdump -h bootload.o) || exit
+boot_map=$(avr-objdump -h bootload.o) || exit
 boot_bytes=$(echo "$boot_map" | gawk '/.text/ {print "0x" $3}')
 boot_bytes=$((boot_bytes + 2))  # add stub size
 boot_words=$((boot_bytes / 2))
