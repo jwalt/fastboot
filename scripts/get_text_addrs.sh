@@ -41,17 +41,10 @@
 # (e.g. '0x1fff' for 16 kByte devices) (#define FLASHEND in the Atmel
 # def file).
 
-if [ "$1" = "-c" ]; then
-    copt=1
-    shift
-fi
-
-[ $# -ne 2 ] && {
+[ $# -ne 3 ] && {
     echo "\
-Syntax: ${0##*/} [-c] object_file higest_flash_word_address
-Function: compute linker parameters for peda's bootloader
-Opts:
-  -c  Use an as compact as possible code layout (smaller than the original)"
+Syntax: ${0##*/} object_file higest_flash_word_address page_size
+Function: compute linker parameters for peda's bootloader"
     exit 1
 }
 
@@ -64,9 +57,9 @@ boot_bytes=$(echo "$boot_map" | gawk '/.text/ {print "0x" $3}')
 boot_bytes=$((boot_bytes + 2))  # add stub size
 boot_words=$((boot_bytes / 2))
 
-[ -z "$copt" ] && boot_bytes="$(( (boot_bytes | 0xff) + 1 ))"
+boot_bytes="$(( ((boot_bytes-1) | ($3-1)) + 1 ))"
 
-printf >&2 "*** Last available byte address for the user program: %#x\n" \
- $((flash_end + 1 - boot_bytes - 3))
+printf >&2 "\n*** Last available byte address for user program: %#x, max program size: %i\n\n" \
+ $((flash_end + 1 - boot_bytes - 3)) $((flash_end - boot_bytes - 1))
 printf "LOADER_START=%#x\n" $((flash_end + 1 - boot_bytes))
 printf "STUB_OFFSET=%#x\n" $((boot_bytes - 2))

@@ -91,7 +91,7 @@ all: $(CONFIG).hex
 
 %.vars: %.o scripts/get_text_addrs.sh scripts/get_avr_arch.sh
 ifndef BOOTRST
-	scripts/get_text_addrs.sh $< $(FLASHEND) > $@
+	scripts/get_text_addrs.sh $< $(FLASHEND) $(PAGESIZE) > $@
 else
 	scripts/get_bootsection_addrs.sh $< $(FLASHEND) $(FIRSTBOOTSTART) \
                 $(SECONDBOOTSTART) $(THIRDBOOTSTART) $(FORTHBOOTSTART) > $@
