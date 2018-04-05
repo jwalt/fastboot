@@ -9,12 +9,18 @@
  */
 
 #include <avr/io.h>
+#include "atmel_def.h"
+#include "mangled_case.h"
               .section .text
               .global stub          ; so it shows up in the symbol table
-stub:         
-#if    __AVR_HAVE_JMP_CALL__
+stub:
+#ifdef FirstBootStart
+# if    __AVR_HAVE_JMP_CALL__
               jmp   api_call
-#else
+# else
               rjmp  api_call
+# endif
+#else   /* no APICALL, so just return */
+              ret
 #endif
               .end

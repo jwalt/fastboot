@@ -4,7 +4,7 @@
 
   Written by Peter Dannegger, modified by H. C. Zimmerer
 
-   Time-stamp: <2009-07-26 17:47:11 hcz>
+   Time-stamp: <2010-01-12 23:00:10 hcz>
 
    You may use my modifications here and in the accompanying files of
    this project for whatever you want to do with them provided you
@@ -81,8 +81,5 @@ Messages:
 ;-------------------------------------------------------------------------
 #if APICALL
 #include "apicall.inc" // program Flash from application
-#else
-              .section .stub
-	ret
 #endif
 ;-------------------------------------------------------------------------

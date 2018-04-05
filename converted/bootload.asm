@@ -54,11 +54,11 @@
 ;-------------------------------------------------------------------------
 ;			set both lines equal for inverted onewire mode:
 
-#define  STX_PORT PORTD
-#define  STX PD1
+#define  STX_PORT PORTB
+#define  STX PB1
 
-#define  SRX_PORT PORTD
-#define  SRX PD0
+#define  SRX_PORT PORTB
+#define  SRX PB0
 ;-------------------------------------------------------------------------
 #include "fastload.inc"
 ;-------------------------------------------------------------------------

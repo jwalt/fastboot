@@ -3,7 +3,7 @@
   
   Written by Peter Dannegger, modified by H. C. Zimmerer
 
-   Time-stamp: <2009-07-26 16:33:49 hcz>
+   Time-stamp: <2010-01-12 22:25:41 hcz>
 
    You may use my modifications here and in the accompanying files of
    this project for whatever you want to do with them provided you
@@ -75,16 +75,16 @@
 #endif
 
 ;------------------------------	Bootloader fuse setting ------------------
-#ifdef FirstBootStart
-#if (FlashEnd - FirstBootStart) >= 256 // 256 Words needed
-#define  BootStart FirstBootStart
-#define  BOOTSTART FirstBootStart
-#else
-#define  BootStart SecondBootStart
-#define  BOOTSTART SecondBootStart
-#endif
+#ifdef FIRSTBOOTSTART
+# if (FlashEnd - FirstBootStart) >= 256 // 256 Words needed
+#  define  BootStart FirstBootStart
+#  define  BOOTSTART FirstBootStart
+# else
+#  define  BootStart SecondBootStart
+#  define  BOOTSTART SecondBootStart
+# endif
   ;----------------------------	max possible buffer size -----------------
-#ifdef HCZ_NEVER_DEFINED
+# ifdef HCZ_NEVER_DEFINED
   .equ  BufferSize,((SRAM_SIZE / 2) - PAGESIZE)
   .macro testpage
     .if		BootStart % BufferSize
@@ -96,24 +96,27 @@
     .endif
   .endm
 	testpage	; calculate Buffersize to fit into BootStart
-#else
-# define BufferSize (SRAM_SIZE/2)
-# define BUFFERSIZE BufferSize
-#endif
+# else
+#  define BufferSize (SRAM_SIZE/2)
+#  define BUFFERSIZE BufferSize
+# endif
   ;-----------------------------------------------------------------------
-#define  UserFlash (2*BootStart)
-#define  USERFLASH (2*BootStart)
-#define  Application 0
-#define  APPLICATION 0
-#else
-#define  BootStart ((FlashEnd - BootSize) / PageSize * PageSize)
-#define  BOOTSTART ((FlashEnd - BootSize) / PageSize * PageSize)
-#define  BufferSize PageSize
-#define  BUFFERSIZE PageSize
-#define  UserFlash (BootStart - 4)
-#define  USERFLASH (BootStart - 4)
-#define  Application BootStart - 2
-#define  APPLICATION BootStart - 2
+# define  UserFlash (2*BootStart)
+# define  USERFLASH (2*BootStart)
+# define  Application 0
+# define  APPLICATION 0
+#else  /* FirstBootStart not defined */
+# ifndef FLASHEND
+#  define FLASHEND FlashEnd
+# endif
+# define  BootStart (FLASHEND - 255)
+# define  BOOTSTART (FLASHEND - 255)
+# define  BufferSize PageSize
+# define  BUFFERSIZE PageSize
+# define  UserFlash (BootStart - 4)
+# define  USERFLASH (BootStart - 4)
+# define  Application BootStart - 2
+# define  APPLICATION BootStart - 2
 #endif
 ;-------------------------------------------------------------------------
 ;				Using register

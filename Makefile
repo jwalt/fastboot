@@ -2,7 +2,7 @@
 # Makefile for Peter Dannegger's bootloader, to be used with the GNU
 # toolchest (as opposed to Atmel's Assembler).
 #
-# Time-stamp: <2010-01-12 12:02:43 hcz>
+# Time-stamp: <2010-01-12 21:58:03 hcz>
 
 
 ####### user presets ##########################
@@ -32,7 +32,8 @@
 #     at90usb646, at90usb647, at90usb1286, at90usb1287, at94k
 # - atmega2560, atmega2561
 #
-MCU = atmega8
+# MCU = atmega8
+MCU = attiny45
 
 # Name of the Atmel defs file for the actual MCU.
 #
@@ -46,7 +47,8 @@ MCU = atmega8
 #
 # Example:
 # ATMEL_INC = m168def.inc
-ATMEL_INC=m8def.inc
+# ATMEL_INC=m8def.inc
+ATMEL_INC=tn45def.inc
 
 # Processor frequency.  The value is not critical:
 #F_CPU = 14745600
