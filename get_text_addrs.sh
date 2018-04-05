@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# Time-stamp: <2009-07-28 18:17:07 hcz>
+# Time-stamp: <2009-08-07 11:29:29 hcz>
 # written by H. C. Zimmerer
 
 # This is somewhat tricky: for devices without a boot section, the
-# bootloader is linked directly at the endof flash so no space is
+# bootloader is linked directly at the end of flash so no space is
 # wasted.  The original bootloader achieves this by using a fixed
 # number and subtracting offsets for the sections which are not
 # included.  The approach used here is fully automatic: it extracts
@@ -13,14 +13,14 @@
 # This way the size of the bootloader may change, but no need arises
 # to fiddle around with fixed numbers until they match.
 
-# So: Use bootload.o to get the size of the bootloader's text section
-# (without the final jmp stub).  Output a line containing shell
-# assignments to LOADER_START (byte start address of the bootloader)
-# and STUB_OFFSET (Offset from the beginning of the bootloader to the
-# final api_call jmp) so that the bootloader exactly fits at the end of
-# flash without any gap.
+# What happens is: Use bootload.o to get the size of the bootloader's
+# text section (without the final jmp stub).  Output a line containing
+# shell assignments to LOADER_START (byte start address of the
+# bootloader) and STUB_OFFSET (Offset from the beginning of the
+# bootloader to the final api_call jmp) so that the bootloader exactly
+# fits at the end of flash without any gap.
 
-# Expects in $1 the word address of the higest flash cell
+# Invocation: Expects in $1 the word address of the higest flash cell
 # (e.g. '0x1fff' for 16 kByte devices) (#define FLASHEND in the Atmel
 # def file).
 

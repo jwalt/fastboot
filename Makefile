@@ -2,7 +2,7 @@
 # Makefile for Peter Dannegger's bootloader, to be used with the GNU
 # toolchest (as opposed to Atmel's Assembler).
 #
-# Time-stamp: <2009-07-30 10:44:16 hcz>
+# Time-stamp: <2009-08-07 14:29:55 hcz>
 
 
 ####### user presets ##########################
@@ -60,7 +60,7 @@ CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU)
 CFLAGS += -I . -I ./added -I ./converted -I/usr/local/avr/include 
 CFLAGS += -ffreestanding
 CFLAGS += -g$(DEBUG)
-CFLAGS += -Wa,-adhlns=bootload.lst
+CFLAGS += -Wa,-adhlns=bootload.lst,-L,-g$(DEBUG)
 CFLAGS += -DRAM_START=$(SRAM_START) -DSRAM_SIZE=$(SRAM_SIZE)
 
 # The following files were imported by a gawk script without user
@@ -120,7 +120,8 @@ else
 	    -e s'/@STUB_OFFSET@/$(STUB_OFFSET)/g' \
 	    bootload.template.x > bootload.x
 endif
-	avr-ld -N -T bootload.x -Map=$(patsubst %.elf,%,$@).map --cref $+ -o $@
+	avr-ld -N -E -T bootload.x -Map=$(patsubst %.elf,%,$@).map --cref $+ -o $@
+	#avr-gcc -Wl,-Map=display.map,--cref -nodefaultlibs -nostdlib $+ -o $@
 
 atmel_def.h: $(ATMEL_INC) Makefile
 #        We use gawk instead of egrep here due to problems with

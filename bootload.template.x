@@ -2,7 +2,7 @@
 
         bootload.template.x and bootload.x
 
-         Time-stamp: <2009-07-28 14:58:19 hcz>
+         Time-stamp: <2009-08-07 14:37:38 hcz>
 
         Linker script for Peter Dannegger's bootloader.  Always make
         sure you edit bootload.template.x.  Any changes made to
@@ -24,6 +24,7 @@ MEMORY
 /* PHDRS { stub PT_LOAD ; } */
 SECTIONS
 {
+  .bss : { *(.bss) } > bss 
   . = @LOADER_START@ ;
   .text : { 
     bootload.o(.text) 
@@ -31,9 +32,8 @@ SECTIONS
     . = @STUB_OFFSET@ ;
     stub.o(.text)
   }
-  .bss : { *(.bss) } > bss 
 
- /* Stabs debugging sections, taken from 'avr-ld --verbose'  */
+ /* Stabs and DWARF debugging sections, taken from 'avr-ld --verbose'  */
   .stab 0 : { *(.stab) }
   .stabstr 0 : { *(.stabstr) }
   .stab.excl 0 : { *(.stab.excl) }
