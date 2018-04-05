@@ -37,7 +37,6 @@
 
               .nolist
 #include <avr/io.h>
-//#include "m168def.h"
               .list
 
 /* 
@@ -46,7 +45,7 @@
    that flash addresses taken from there are word addresses.
 */
 #undef FLASHEND
-#include "atmel_def.h"
+#include CONFIG_H
               
 #define byte3(x) ((x)>>16)
 #define byte2(x) ((x & 0xff00)>>8)

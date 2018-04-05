@@ -47,10 +47,10 @@ SECTIONS
   .bss : { *(.bss) } > bss 
   . = @LOADER_START@ ;
   .text : { 
-    bootload.o(.text) 
+    @CONFIG@.o(.text) 
     /* place a jump to api_call at the very end: */
     . = @STUB_OFFSET@ ;
-    stub.o(.text)
+    @CONFIG@-stub.o(.text)
   }
 
  /* Stabs and DWARF debugging sections, taken from 'avr-ld --verbose'  */

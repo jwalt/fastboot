@@ -17,16 +17,18 @@
 
 #set -x
 
-[ $# -lt 2 ] || [ "${1#-}" != "$1" ] && {
+[ $# -lt 3 ] || [ "${1#-}" != "$1" ] && {
     echo "\
-Syntax: ${0##*/} higest_flash_word_address bootsection_word_addresses ..."
+Syntax: ${0##*/} object_file higest_flash_word_address bootsection_word_addresses ..."
     exit 1
 }
 
+obj="$1"
+shift
 end_wordaddr=$(($1))
 shift
 
-boot_map=$(avr-objdump -h bootload.o) || exit
+boot_map=$(avr-objdump -h "$obj") || exit
 boot_bytes=$(echo "$boot_map" | gawk '/.text/ {print "0x" $3}')
 boot_bytes=$((boot_bytes + 2))  # add stub size
 boot_words=$((boot_bytes / 2))

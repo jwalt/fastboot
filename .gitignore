@@ -1,3 +1,14 @@
 *~
 *.swp
 /atmel/*.inc
+/config/*.mak
+!/config/bootload.mak
+*.bin
+*.elf
+*.hex
+*.lst
+*.map
+*.o
+*.x
+/*.h
+/*.mak

@@ -29,7 +29,7 @@
 
 #include <avr/io.h>
 #undef FLASHEND
-#include "atmel_def.h"
+#include CONFIG_H
 #include "mangled_case.h"
               .section .text
               .global stub          ; so it shows up in the symbol table

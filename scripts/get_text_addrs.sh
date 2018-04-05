@@ -46,9 +46,9 @@ if [ "$1" = "-c" ]; then
     shift
 fi
 
-[ $# -ne 1 ] && {
+[ $# -ne 2 ] && {
     echo "\
-Syntax: ${0##*/} [-c] higest_flash_word_address
+Syntax: ${0##*/} [-c] object_file higest_flash_word_address
 Function: compute linker parameters for peda's bootloader
 Opts:
   -c  Use an as compact as possible code layout (smaller than the original)"
@@ -56,10 +56,10 @@ Opts:
 }
 
 
-end_wordaddr=$(($1))
-flash_end=$(printf "%#x\n" $(($1 * 2 + 1)))
+end_wordaddr=$(($2))
+flash_end=$(printf "%#x\n" $(($2 * 2 + 1)))
 
-boot_map=$(avr-objdump -h bootload.o) || exit
+boot_map=$(avr-objdump -h $1) || exit
 boot_bytes=$(echo "$boot_map" | gawk '/.text/ {print "0x" $3}')
 boot_bytes=$((boot_bytes + 2))  # add stub size
 boot_words=$((boot_bytes / 2))
