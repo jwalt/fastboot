@@ -10,13 +10,9 @@ DESCRIPTION
 NEW in BUILD# 22
 ================
 
- The entire configuartion has been moved into Makefile.  You don't
+ The entire configuration has been moved into Makefile.  You don't
  need to go into another file anymore to adapt the bootloader to your
  configuration.
-
- The bootloader now uses an even compacter code layout for devices
- without a boot section (e.g., Tiny AVRs), squeezing out another ~30
- bytes over the original version.
 
 
 QUICK START (LINUX)

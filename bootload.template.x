@@ -15,7 +15,7 @@
 
 
 OUTPUT_FORMAT("elf32-avr","elf32-avr","elf32-avr")
-OUTPUT_ARCH(avr:2)
+OUTPUT_ARCH(@ARCH@)
 MEMORY
 {
   text      (rx)   : ORIGIN = @LOADER_START@, LENGTH = @STUB_OFFSET@ + 2

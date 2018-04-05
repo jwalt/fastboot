@@ -36,6 +36,7 @@
 # MCU = atmega64
 # MCU = attiny85
 # MCU = atmega2560
+# MCU = atmega1281
 MCU = atmega8
 
 # Name of the Atmel defs file for the actual MCU.
@@ -53,6 +54,7 @@ MCU = atmega8
 # ATMEL_INC=m64def.inc
 # ATMEL_INC=tn85def.inc
 # ATMEL_INC = m2560def.inc
+# ATMEL_INC = m1281def.inc
 ATMEL_INC = m8def.inc
 
 # Processor frequency.  The value is not critical:
@@ -64,8 +66,8 @@ F_CPU = 8000000
 #DEBUG = dwarf-2
 DEBUG = stabs+
 
-# Define the Tx and Rx lines here.  Set both lines equal for one wire
-# mode:
+# Define the Tx and Rx lines here.  Set both groups to the same for
+# one wire mode:
 STX_PORT = PORTD
 STX = PD1
 
@@ -119,18 +121,21 @@ include atmel_def.mak
 
 ifdef BOOTRST
 STUB_OFFSET = 510 
-LOADER_START = ( $(FLASHEND) * 2 ) - 510 # -"-
+LOADER_START = ( $(FLASHEND) * 2 ) - 510
 endif
 
+all: bootload.hex
 
 bootload.hex: bootload.elf
 
 bootload.elf : bootload.o stub.o
 ifndef BOOTRST
 	vars="$$(./get_text_addrs.sh $(FLASHEND))"; \
+	arch="$$(avr-gcc -mmcu=$(MCU) -### bootload.o  -o x 2>&1 | gawk '/\/bin\/ld/ {print $$3}')";\
 	echo "$$vars"; \
 	eval "$$vars"; \
 	sed -e "s/@LOADER_START@/$$LOADER_START/g" \
+	    -e s"/@ARCH@/$$arch/" \
 	    -e s'/@RAM_START@/$(SRAM_START)/g' \
 	    -e s'/@RAM_SIZE@/$(SRAM_SIZE)/g' \
 	    -e "s/@STUB_OFFSET@/$$STUB_OFFSET/g" \
@@ -140,9 +145,11 @@ ifndef BOOTRST
 else
 	vars="$$(./get_bootsection_addrs.sh $(FLASHEND) $(FIRSTBOOTSTART) \
                 $(SECONDBOOTSTART) $(THIRDBOOTSTART) $(FORTHBOOTSTART))"; \
+	arch="$$(avr-gcc -mmcu=$(MCU) -### bootload.o  -o x 2>&1 | gawk '/\/bin\/ld/ {print $$3}')";\
 	echo "$$vars"; \
 	eval "$$vars"; \
 	sed -e "s/@LOADER_START@/$$LOADER_START/g" \
+	    -e s"/@ARCH@/$$arch/" \
 	    -e s'/@RAM_START@/$(SRAM_START)/g' \
 	    -e s'/@RAM_SIZE@/$(SRAM_SIZE)/g' \
 	    -e "s/@STUB_OFFSET@/$$STUB_OFFSET/g" \
