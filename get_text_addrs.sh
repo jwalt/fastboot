@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <2010-01-13 10:29:16 hcz>
+# Time-stamp: <2010-01-13 19:01:06 hcz>
 # written by H. C. Zimmerer
 
 # This is somewhat tricky: for devices without a boot section, the
@@ -34,7 +34,7 @@ avr-objdump -h bootload.o \
 | gawk -v end_wordaddr="$1" '
     $2 == ".text" {
       len = strtonum("0x" $3)
-      end = (strtonum(end_wordaddr) + 1) * 2
+      end = (strtonum(end_wordaddr) + 1)
       printf("# loader starts at %#x\n", end - len - 2)
       printf("LOADER_START=\"(%#x - %d)\"\n", end, len+2)
       printf("STUB_OFFSET=%d\n", len)
