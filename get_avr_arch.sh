@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Get AVR architecture
+#
+# (c) 2010 Heike C. Zimmerer <hcz@hczim.de>
+# License: PGL v3
+
+# 2010-08-19: now runs gawk instead of awk.  WinAVR only knows about gawk.
+ 
 usage(){
     echo "\
 Usage: $pname -mmcu=<mcutype> <objfile.o>
@@ -33,9 +40,9 @@ magic=";#magic1295671ghkl-."
 # call gcc, asking it for the command line which it would use for
 # linking:
 set -- $(avr-gcc -m"$mcu" -### "$1" -o "$magic" 2>&1 \
-         | awk '/^avr-gcc:/||/ld.*'"$magic"'.*"-lgcc"/')
+         | gawk '/^avr-gcc:/||/ld.*'"$magic"'.*"-lgcc"/')
 
-if [ $1 = "avr-gcc:" ]; then
+if [ "$1" = "avr-gcc:" ]; then
     # we have an error message from gcc:
     echo "$*"
     exit 1

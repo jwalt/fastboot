@@ -12,6 +12,8 @@
 # assignemnts: LOADER_START (the start address of the bootloader in
 # bytes) and STUB_OFFSET (the offset of added/stub.S relative to
 # LOADER_START (bytes)).
+#
+# (c) 2010 Heike C. Zimmerer <hcz@hczim.de>
 
 #set -x
 
