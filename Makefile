@@ -2,7 +2,7 @@
 # Makefile for Peter Dannegger's bootloader, to be used with the GNU
 # toolchest (as opposed to Atmel's Assembler).
 #
-# Time-stamp: <2010-01-16 15:05:40 hcz>
+# Time-stamp: <2010-02-01 12:20:02 hcz>
 
 
 ####### user presets ##########################
@@ -128,6 +128,7 @@ bootload.hex: bootload.elf
 bootload.elf : bootload.o stub.o
 ifndef BOOTRST
 	vars="$$(./get_text_addrs.sh $(FLASHEND))"; \
+	echo "$$vars"; \
 	eval "$$vars"; \
 	sed -e "s/@LOADER_START@/$$LOADER_START/g" \
 	    -e s'/@RAM_START@/$(SRAM_START)/g' \
@@ -139,6 +140,7 @@ ifndef BOOTRST
 else
 	vars="$$(./get_bootsection_addrs.sh $(FLASHEND) $(FIRSTBOOTSTART) \
                 $(SECONDBOOTSTART) $(THIRDBOOTSTART) $(FORTHBOOTSTART))"; \
+	echo "$$vars"; \
 	eval "$$vars"; \
 	sed -e "s/@LOADER_START@/$$LOADER_START/g" \
 	    -e s'/@RAM_START@/$(SRAM_START)/g' \

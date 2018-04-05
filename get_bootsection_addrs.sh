@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <2010-01-22 11:13:33 hcz>
+# Time-stamp: <2010-02-01 12:20:02 hcz>
 # written by H. C. Zimmerer
 
 # This small scripts selects the bootloader start address.  It expects
@@ -29,6 +29,7 @@ boot_bytes=$(echo "$boot_map" | gawk '/.text/ {print "0x" $3}')
 boot_bytes=$((boot_bytes + 2))  # add stub size
 boot_words=$((boot_bytes / 2))
 
+
 diff=999999
 for bootsection_words; do
     d=$(( (end_wordaddr - bootsection_words) - boot_words))
@@ -39,8 +40,7 @@ for bootsection_words; do
 done
 
 
-(
-    printf "LOADER_START=%#x\n" $((bootsection_words_start * 2))
-    printf "STUB_OFFSET=%#x\n" $(( (end_wordaddr - bootsection_words_start) * 2)) \
-) | tee /dev/stderr
+printf "LOADER_START=%#x\n" $((bootsection_words_start * 2))
+printf "STUB_OFFSET=%#x\n" $(( (end_wordaddr - bootsection_words_start) * 2))
+
 echo >&2 "*** Note: set BOOTSZ fuses for the word address $bootsection_words_start ***"

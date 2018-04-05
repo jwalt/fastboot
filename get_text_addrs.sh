@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <2010-01-22 11:13:33 hcz>
+# Time-stamp: <2010-02-01 12:19:18 hcz>
 # written by H. C. Zimmerer
 
 # This is somewhat tricky: for devices without a boot section, the
@@ -51,7 +51,5 @@ boot_words=$((boot_bytes / 2))
 
 printf >&2 "*** Last available byte address for the user program: %#x\n" \
  $((flash_end + 1 - boot_bytes - 3))
-{
-    printf "LOADER_START=%#x\n" $((flash_end + 1 - boot_bytes))
-    printf "STUB_OFFSET=%#x\n" $((boot_bytes - 2))
-} | tee /dev/stderr
+printf "LOADER_START=%#x\n" $((flash_end + 1 - boot_bytes))
+printf "STUB_OFFSET=%#x\n" $((boot_bytes - 2))
