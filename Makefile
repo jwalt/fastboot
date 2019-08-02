@@ -82,14 +82,9 @@ ASMSRC = $(AUTO_CONVERTED_FILES) $(MANUALLY_ADDED_FILES)
 
 include $(CONFIG).mak
 
-ifdef BOOTRST
-STUB_OFFSET = 510 
-LOADER_START = ( $(FLASHEND) * 2 ) - 510
-endif
-
 all: $(CONFIG).hex
 
-%.vars: %.o scripts/get_text_addrs.sh scripts/get_avr_arch.sh
+%.vars: %_stage1.o scripts/get_text_addrs.sh scripts/get_avr_arch.sh
 ifndef BOOTRST
 	scripts/get_text_addrs.sh $< $(FLASHEND) $(PAGESIZE) > $@
 else
@@ -100,6 +95,7 @@ endif
 
 %.x: %.vars added/bootload.x.template
 	source $<; sed -e "s/@LOADER_START@/$$LOADER_START/g" \
+	    -e s"/@START@/$$START/g" \
 	    -e s'/@CONFIG@/$(CONFIG)/g' \
 	    -e s"/@ARCH@/$$arch/" \
 	    -e s'/@RAM_START@/$(SRAM_START)/g' \
@@ -107,36 +103,35 @@ endif
 	    -e "s/@STUB_OFFSET@/$$STUB_OFFSET/g" \
 	    added/bootload.x.template > $@
 
-%.elf : %.x %.vars %.o %-stub.o
+%.elf : %.x %.vars %.o %-stub.o %-empty.o
 ifndef BOOTRST
 	source $*.vars; avr-ld -N -E -T $*.x -Map=$(patsubst %.elf,%,$@).map \
-	  --cref $*.o $*-stub.o -o $@ --defsym Application="$$LOADER_START-2"
+	  --cref $*.o $*-*.o -o $@ --defsym Application="$$LOADER_START-2"
 else
 	source $*.vars; avr-ld -N -E -T $*.x -Map=$(patsubst %.elf,%,$@).map \
-	  --cref $*.o $*-stub.o -o $@ --defsym Application=0
+	  --cref $*.o $*-*.o -o $@ --defsym Application=0
 endif
 
+# We use gawk instead of egrep here due to problems with
+# WinAVR's egrep (which I didn't dive into):
 $(CONFIG).h: atmel/$(ATMEL_INC) Makefile config/$(CONFIG).mak
-#        We use gawk instead of egrep here due to problems with
-#        WinAVR's egrep (which I didn't dive into):
 	scripts/conv.awk $< | gawk '/PAGESIZE|SIGNATURE_|SRAM_|FLASHEND|BOOT/' > $@
 
 $(CONFIG).mak: $(CONFIG).h
 	gawk '{ printf "%s = %s\n", $$2, $$3 }' $< > $@
 
 
-$(CONFIG).o: $(ASMSRC) $(CONFIG).h
-	avr-gcc -c -Wa,-adhlns=$(CONFIG).lst $(CFLAGS) added/bootload.S -o $@
+$(CONFIG).o: $(ASMSRC) $(CONFIG).h $(CONFIG).vars
+	. $(CONFIG).vars; avr-gcc -c -Wa,-adhlns=$(CONFIG).lst -DLOADER_START=$$LOADER_START $(CFLAGS) added/bootload.S -o $@
 
-$(CONFIG)-stub.o: added/stub.S $(CONFIG).h
-	avr-gcc -c -Wa,-adhlns=stub.lst $(CFLAGS) $< -o $@
+$(CONFIG)_stage1.o: $(ASMSRC) $(CONFIG).h
+	avr-gcc -c -Wa,-adhlns=$(CONFIG).lst -DLOADER_START=0 $(CFLAGS) added/bootload.S -o $@
+
+$(CONFIG)-%.o: added/%.S $(CONFIG).h
+	avr-gcc -c -Wa,-adhlns=$*.lst $(CFLAGS) $< -o $@
 
 %.hex: %.elf
-# avr-objcopy might put a 0x03 record type into the resulting ihex
-# file. Atmel Studio and other Windows tools might not like this.
-# Circumvent by converting to binary first, then to ihex.
-	avr-objcopy -O binary $< $(<:.elf=.bin)
-	avr-objcopy -I binary -O ihex $(<:.elf=.bin) $@
+	avr-objcopy -O ihex $< $@
 
 %: config/%.mak
 	make CONFIG=$*
@@ -144,10 +139,10 @@ $(CONFIG)-stub.o: added/stub.S $(CONFIG).h
 .PHONY: clean dbg distclean
 
 clean: 
-	rm -f *.h *.x *.defs *.o *.gas *.mak *.lst *.02x *.map
+	rm -f *.h *.x *.defs *.o *.gas *.mak *.lst *.02x *.map *.vars
 
 distclean: clean
-	rm -f *.hex *.bin
+	rm -f *.hex *.bin *.elf
 
 ###
 # generate a dump of the definitions available to the assembler

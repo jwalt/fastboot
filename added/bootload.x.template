@@ -36,7 +36,7 @@ OUTPUT_FORMAT("elf32-avr","elf32-avr","elf32-avr")
 OUTPUT_ARCH(@ARCH@)
 MEMORY
 {
-  text      (rx)   : ORIGIN = @LOADER_START@, LENGTH = @STUB_OFFSET@ + 2
+  text      (rx)   : ORIGIN = @START@, LENGTH = @LOADER_START@ + @STUB_OFFSET@ + 2
   bss       (rw!x) : ORIGIN = 0x8000000 + @RAM_START@, LENGTH = @RAM_SIZE@
 }
 
@@ -45,11 +45,13 @@ MEMORY
 SECTIONS
 {
   .bss : { *(.bss) } > bss 
-  . = @LOADER_START@ ;
+  . = @START@ ;
   .text : { 
+    @CONFIG@-empty.o(.text)
+    . = @LOADER_START@ ;
     @CONFIG@.o(.text) 
     /* place a jump to api_call at the very end: */
-    . = @STUB_OFFSET@ ;
+    . = @LOADER_START@ + @STUB_OFFSET@ ;
     @CONFIG@-stub.o(.text)
   }
 

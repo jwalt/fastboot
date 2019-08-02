@@ -40,6 +40,7 @@
 ;*************************************************************************
 #include "fastload.h"
 .list
+.global init
 init:
 #ifndef FIRSTBOOTSTART
 ;        .equ    Application,init-2

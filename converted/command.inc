@@ -47,8 +47,8 @@ _cex3:
 	breq	program			; command 4
 	cpi	a0, 5
 	breq	timeout			; command 5
-#if VERIFY
 	cpi	a0, 7
+#if VERIFY
 	breq	VerifyFlash		; command 7
 #endif
 	ldi	a0, BADCOMMAND

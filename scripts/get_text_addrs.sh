@@ -61,5 +61,6 @@ boot_bytes="$(( ((boot_bytes-1) | ($3-1)) + 1 ))"
 
 printf >&2 "\n*** Last available byte address for user program: %#x, max program size: %i\n\n" \
  $((flash_end + 1 - boot_bytes - 3)) $((flash_end - boot_bytes - 1))
+printf "START=0\n"
 printf "LOADER_START=%#x\n" $((flash_end + 1 - boot_bytes))
 printf "STUB_OFFSET=%#x\n" $((boot_bytes - 2))

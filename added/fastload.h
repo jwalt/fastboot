@@ -140,8 +140,8 @@
 # ifndef FLASHEND
 #  define FLASHEND FlashEnd
 # endif
-# define  BootStart (FLASHEND - 255)
-# define  BOOTSTART (FLASHEND - 255)
+# define  BOOTSTART LOADER_START/2
+# define  BootStart BOOTSTART
 # define  BufferSize PageSize
 # define  BUFFERSIZE PageSize
 # define  UserFlash (2 * BootStart - 2)

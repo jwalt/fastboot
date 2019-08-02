@@ -44,7 +44,8 @@ for bootsection_words; do
 done
 
 
-printf "LOADER_START=%#x\n" $((bootsection_words_start * 2))
+printf "START=%#x\n" $((bootsection_words_start * 2))
+printf "LOADER_START=0\n"
 printf "STUB_OFFSET=%#x\n" $(( (end_wordaddr - bootsection_words_start) * 2))
 
 echo >&2 "*** Note: set BOOTSZ fuses to the word address $bootsection_words_start ***"
