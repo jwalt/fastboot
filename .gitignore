@@ -1,8 +1,6 @@
 *~
 *.swp
 /atmel/*.inc
-/config/*.mak
-!/config/bootload.mak
 *.bin
 *.elf
 *.hex
@@ -10,5 +8,6 @@
 *.map
 *.o
 *.x
+*.vars
 /*.h
 /*.mak
